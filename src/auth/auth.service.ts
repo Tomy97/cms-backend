@@ -26,7 +26,8 @@ export class AuthService {
       return {
         access_token: this.jwtService.sign(payload),
       };
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error)
       throw new BadRequestException('Usuario no encontrado');
     }
   }
