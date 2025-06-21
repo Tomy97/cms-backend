@@ -1,5 +1,0 @@
-@gestor_backend_HostAddress = http://localhost:4000
-
-Accept: application/json
-
-###

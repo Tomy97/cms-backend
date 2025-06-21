@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int   @unique  @id @default(autoincrement())
+  rolId Int
+  email     String   @unique
+  password  String
+  name String
+  lastName String
+
+  provinceId Int
+  cityId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+
+  rol Rol @relation(fields: [rolId], references: [id])
+  province Province @relation(fields: [provinceId], references: [id])
+  city City @relation(fields: [cityId], references: [id])
+
+  clients    Client[]
+  products   Product[]
+  categories Category[]
+  orders     Order[]
+}
+
+model Client {
+  id  Int   @unique  @id @default(autoincrement())
+  userId    Int
+  cityId    Int
+  stateId   Int
+
+  name      String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  city      City     @relation(fields: [cityId], references: [id])
+  state     State    @relation(fields: [stateId], references: [id])
+
+  orders Order[]
+}
+
+model Product {
+  id   Int   @unique  @id @default(autoincrement())
+  userId      Int
+  categoryId  Int
+  title       String
+  price       Decimal
+  stock       Int
+  image       Bytes
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  User       User?   @relation(fields: [userId], references: [id])
+  Category    Category @relation(fields: [categoryId], references: [id])
+  Order      Order[]
+}
+
+model Category {
+  id Int   @unique  @id @default(autoincrement())
+  userId     Int
+  title      String
+  image      Bytes
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  Products   Product[]
+  User       User?     @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id         Int           @unique  @id @default(autoincrement())
+  userId          Int
+  clientId        Int
+  productId       Int
+  stateId         Int
+  paymentMethodId Int
+  deliveryDate    DateTime
+  description     String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now())
+
+  PaymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  State           State         @relation(fields: [stateId], references: [id])
+  Product         Product       @relation(fields: [productId], references: [id])
+  User            User         @relation(fields: [userId], references: [id])
+  Client          Client       @relation(fields: [clientId], references: [id])
+}
+
+model State {
+  id Int  @unique  @id @default(autoincrement())
+  name    String
+
+  clients Client[]
+  orders  Order[]
+}
+
+model PaymentMethod {
+  id Int @unique  @id @default(autoincrement())
+  name            String
+
+  orders Order[]
+}
+
+model City {
+  id Int @unique  @id @default(autoincrement())
+  provinceId Int
+  name   String
+
+  Province Province @relation(fields: [provinceId], references: [id])
+  clients Client[]
+  User User[]
+}
+
+model Province {
+  id Int @unique  @id @default(autoincrement())
+  name String
+
+  City City[]
+  User User[]
+}
+
+model Rol {
+  id Int @unique  @id @default(autoincrement())
+  name String
+
+  User User[]
+}
