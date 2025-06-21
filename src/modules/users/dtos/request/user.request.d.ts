@@ -1,4 +1,3 @@
-export type UserRequest = {
-  email: string;
-  password: string;
-}
+import { User } from '../../../../models';
+
+export type UserRequest = Omit<User, 'id' | 'createdAt' | 'updatedAt'>

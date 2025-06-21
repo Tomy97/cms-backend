@@ -15,12 +15,12 @@ export class UsersService {
 
   async findUserExist(email: string): Promise<boolean> {
     const user = await this.findOne(email);
-    return user ? true : false;
+    return !!user;
   }
 
   async create(data: UserRequest): Promise<User> {
     return this.prisma.user.create({
-      data,
+      data
     });
   }
 
