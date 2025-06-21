@@ -160,7 +160,7 @@ async function main() {
     ]
   })
 
-  await prisma.state.updateMany({
+  await prisma.state.createMany({
     data: [
       {
         id: 1,
@@ -213,7 +213,7 @@ async function main() {
     data: {
       id: 1,
       name: 'admin',
-      lastName: ' ',
+      lastName: 'admin',
       email: 'admin@admin.com',
       password: 'admin',
       rolId: 1,
@@ -221,7 +221,6 @@ async function main() {
       cityId: 1,
     },
   });
-
 }
 
 main()
